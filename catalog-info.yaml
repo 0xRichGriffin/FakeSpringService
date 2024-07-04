@@ -1,0 +1,126 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: ESI-PaymentService_Migration-Test
+  title: ESI PaymentService Migration-Test
+  description: |
+    A service for testing Backstage functionality.
+  labels:
+    tier: "3"
+  links:
+    - url: https://www.notion.so/roadie/ESI-PaymentService_Migration-Test-e067465e56a14ae9b0507f8559f6aa26
+      title: Datadog
+      icon: dashboard
+  tags:
+    - test
+    - java
+    - esi
+    - demo
+  annotations:
+    bitbucket.org/project-slug: flooid/esi-paymentservice-migration-test
+    # The Sentry organization is stored in the app-config.yaml of the Backstage instance.
+    sentry.io/project-slug: ESI-PaymentService_Migration-Test
+    # replace with a reference to nexus
+    cloud.google.com/function-ids: projects/roadie-dev-283705/locations/europe-west1/functions/test-fn-1
+    backstage.io/techdocs-ref: dir:.
+    pagerduty.com/service-id: PZDAG59
+    backstage.io/kubernetes-id: ESI-PaymentService_Migration-Test
+    jenkinsintegration.pcms.local/repo-slug: ESI-PaymentService_Migration-Test
+    backstage.io/kubernetes-label-selector: 'app.kubernetes.io/name=ESI-PaymentService_Migration-Test'
+    opsgenie.com/component-selector: ESI-PaymentService_Migration-Test
+    qameta.io/allure-project: value
+    sonarqube.org/project-key: ESI-PaymentService_Migration-Test
+    backstage.io/code-coverage: enabled
+    endoflife.date/products: java8
+spec:
+  type: service
+  owner: group:flooid/engineering
+  lifecycle: production
+  system: esi-system
+  custom:
+    em: user:dtuite
+    product: user:samnixon87
+  providesApis:
+    - ESI-PaymentService_Migration-Test
+  dependsOn:
+    - Component:ESI-PaymentService_Migration-Test-2
+    - Resource:ESI-s3-bucket
+
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  title: Sentry JS
+  name: sentry-js
+  description: A JS client which communicates with the Sentry HTTP API.
+spec:
+  type: library
+  lifecycle: production
+  owner: group:flooid/marketing
+  system: esi-system
+  subcomponentOf: ESI-PaymentService_Migration-Test
+
+---
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  title: ESI Service API
+  name: ESI-PaymentService_Migration-Test
+  description: The ESI Service API allows you to send errors to Rollbar or Sentry.
+  tags:
+    - unstable
+spec:
+  type: openapi
+  lifecycle: production
+  owner: group:flooid/engineering
+  system: esi-system
+  definition:
+    $text: https://bitbucket.org/flooid/esi-paymentservice-migration-test/src/main/api-spec.yaml
+
+---
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  title: ESI OpenApi Ref API
+  name: open-api-ref-ESI
+  description: ESI catalog file referencing Petstore openapi spec
+  tags:
+    - unstable
+spec:
+  type: openapi
+  lifecycle: production
+  owner: group:flooid/engineering
+  system: esi-system
+  definition:
+    $text: https://petstore.swagger.io/v2/swagger.json
+
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: ESI-s3-bucket
+  description: The s3 bucket with the ESI data in it. Doesn't really exist.
+spec:
+  type: s3-bucket
+  owner: team-alpha
+  system: esi-system
+
+---
+apiVersion: backstage.io/v1alpha1
+kind: Domain
+metadata:
+  name: ESI-domain
+  description: ESI domain which has stuff for demoing.
+spec:
+  owner: group:flooid/engineering
+
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  title: ESI System
+  name: esi-system
+  description: ESI things which are good for demoing.
+spec:
+  owner: group:flooid/engineering
+  domain: ESI-domain
